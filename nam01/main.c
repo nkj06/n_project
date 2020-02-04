@@ -13,16 +13,14 @@
 #include <io.h>
 
 struct _finddata_t fd;
-/* 위에서 struct _finddata_t 는 MS사에서 제공하는 구조체
+/* 
+    위에서 struct _finddata_t 는 MS사에서 제공하는 구조체
     자료형으로서 파일 정보 관리를 위한 자료형 입니다.
-
-    _finddata_t라는 자료형은 io.h에 아래와 같이 6개의 필드를
-    갖는 구조체 자료형으로 정의되어져 있습니다.
 */
 
-struct NO {
+struct NO { // 파일이름 저장하기 위한 구조체
     char n[100];
-}; // 파일이름 저장하기 위한 구조체
+}; 
 
 int i; // 반복 변수 
 struct NO no[100]; // 중복 파일 확인을 위한 변수 
