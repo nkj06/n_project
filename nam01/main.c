@@ -2,11 +2,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <io.h>
-#include <Windows.h>
 
 struct _finddata_t fd;
 
+struct NO {
+    char n[100];
+};
+
+int i; // 반복 변수 
+struct NO no[100]; // 중복 파일 확인을 위한 변수 
+int count = 0; // 파일 개수 확인용 변수
+
 int file(file_pt) {
+
     FILE* output;
     int ch; // 문자를 저장할 변수
 
@@ -43,7 +51,7 @@ void FileSearch(char file_path[])
 {
     intptr_t handle;
     int check = 0;
-    char file_path2[_MAX_PATH];
+    char file_path2[100];
 
     strcat(file_path, "\\");  // file_path 뒤에 \\를 붙임
     strcpy(file_path2, file_path); // file_path의 문자열을 file_path2로 복사
@@ -57,7 +65,7 @@ void FileSearch(char file_path[])
 
     while (_findnext(handle, &fd) == 0)
     {
-        char file_pt[_MAX_PATH];
+        char file_pt[100];
         strcpy(file_pt, file_path2);
         strcat(file_pt, fd.name);
 
@@ -69,8 +77,30 @@ void FileSearch(char file_path[])
         }
         else if (check == 1 && fd.size != 0 && fd.name[0] != '.')
         {
-            printf("파일명 : %s\n", file_pt);
-            file(file_pt);
+            int nameCheck = 0;
+
+            for (i = 0; i < count; i++) // 체크
+            {
+                if (strcmp(no[i].n, fd.name) == 0) // 같으면 0 
+                {
+                    nameCheck = 1;
+                    break;
+                }
+            }
+            if (nameCheck == 1) // 같은게 있다면 패스
+            {
+                continue;
+            }
+
+            if (strstr(fd.name, ".txt")) // txt 파일이 있는가 확인
+            {
+                strcpy(no[count].n, fd.name); // 배열에 복사해 넣기
+                count++; // 증가시켜
+
+                printf("파일명 : %s\n", fd.name);
+                file(file_pt);
+
+            }
         }
     }
 
