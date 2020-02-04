@@ -33,8 +33,6 @@ int file(file_pt) { // .txt파일 출력
 
     fopen_s(&output, file_pt, "r"); // 여기서 file_pt는 파일 경로
     if (output == NULL) {
-        printf("파일 없음\n");
-
         return 1;
     }
 
@@ -72,7 +70,6 @@ void FileSearch(char file_path[])
 
     if ((handle = _findfirst(file_path, &fd)) == -1)
     {
-        printf("No such file or directory\n");
         return;
     }
 
@@ -88,6 +85,7 @@ void FileSearch(char file_path[])
         {
             FileSearch(file_pt);    //하위 디렉토리 검색 재귀함수
         }
+       
         else if (check == 1 && fd.size != 0 && fd.name[0] != '.')
         {
             int nameCheck = 0;
@@ -100,6 +98,7 @@ void FileSearch(char file_path[])
                     break;
                 }
             }
+
             if (nameCheck == 1) // 같은게 있다면 패스
             {
                 continue;
