@@ -1,16 +1,40 @@
 #include <windows.h>
 #include <stdio.h>
+#include <tchar.h>
 
-int main() {
+// Use to convert bytes to KB
+#define DIV 1024
 
-    SYSTEMTIME localTime;
-    SYSTEMTIME SysTime;
+// Specify the width of the field in which to print the numbers. 
+// The asterisk in the format specifier "%*I64d" takes an integer 
+// argument and uses it to pad and right justify the number.
+#define WIDTH 7
 
-    GetSystemTime(&SysTime);
-    GetLocalTime(&localTime);
+void _tmain()
+{
+    MEMORYSTATUSEX statex;
 
-    printf("[시스템 시간] 시 : %d, 분 : %d 초 : %d\n", SysTime.wHour, SysTime.wMinute, SysTime.wSecond);
-    printf("[로컬 시간 ]  시 : %d, 분 : %d 초 : %d\n", localTime.wHour, localTime.wMinute, localTime.wSecond);
+    statex.dwLength = sizeof(statex);
 
-    return 0;
+    GlobalMemoryStatusEx(&statex);
+
+    _tprintf(TEXT("There is  %*ld percent of memory in use.\n"),
+        WIDTH, statex.dwMemoryLoad);
+    _tprintf(TEXT("There are %*I64d total KB of physical memory.\n"),
+        WIDTH, statex.ullTotalPhys / DIV);
+    _tprintf(TEXT("There are %*I64d free  KB of physical memory.\n"),
+        WIDTH, statex.ullAvailPhys / DIV);
+    _tprintf(TEXT("There are %*I64d total KB of paging file.\n"),
+        WIDTH, statex.ullTotalPageFile / DIV);
+    _tprintf(TEXT("There are %*I64d free  KB of paging file.\n"),
+        WIDTH, statex.ullAvailPageFile / DIV);
+    _tprintf(TEXT("There are %*I64d total KB of virtual memory.\n"),
+        WIDTH, statex.ullTotalVirtual / DIV);
+    _tprintf(TEXT("There are %*I64d free  KB of virtual memory.\n"),
+        WIDTH, statex.ullAvailVirtual / DIV);
+
+    // Show the amount of extended memory available.
+
+    _tprintf(TEXT("There are %*I64d free  KB of extended memory.\n"),
+        WIDTH, statex.ullAvailExtendedVirtual / DIV);
 }
